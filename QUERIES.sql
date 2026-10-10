@@ -167,3 +167,120 @@ SELECT year, subject, winner, country FROM nobel_win WHERE subject = 'Chemistry'
 30.
 31. SELECT com_name AS "Company", (SELECT AVG(pro_price) FROM item_mast WHERE pro_com = company_mast.com_id) AS "Average Price” FROM company_mast;
 
+--NORTHWIND CHALLENGE ASSIGNMENT -01
+
+1. SELECT orders.orderid from orders,customers where customers.customerid=orders.customerid and customers.contactname=’HANNA MOOS’;
+2. SELECT products.ProductName FROM orders, products WHERE orders.ProductID = products.ProductID AND orders.OrderID = 11011;
+3. SELECT total_amount from orders where orderID=11011;
+4. SELECT customers.contactname,employees.firstname from orders,customers,employees where customers.customerid=orders.customerid and employees.employeeid=orders.employeeid and orders.orderdate between ‘2020-01-30’ and ‘2021-03-05’;
+5. SELECT shipcountry,count(*) from orders group by shipcountry;
+6. SELECT categories.categoryname,SUM(orders.total_Amount) as total_sale from orders,products,categories where categories.categoryid=products.categoryid and orders.productid=product.productsid group by categories.categoryname order by total_sale DESC;
+7. SELECT products.productname,SUM(orders.total_Amount) as ‘Total_Sale’ from orders,products where orders.productid=products.productid group by products.productname order by Total_Sale Desc;
+8. SELECT sum(total_amount) as ‘Total_Sale’ from orders;
+9.SELECT orders.orderid products.productname,Orders.quantity,orders.UnitPrice, Sum(orders.total_amount) as ‘Total_Amount’ from orders,products where products.productid=orders.productid group by orders.orderidproducts.ProductName, orders.Quantity,orders.UnitPrice;
+10. SELECT orders.orderid from customers,orders where customers.customerid=orders.customerid and customers.contactname=’Laura’;
+ 
+
+--NORTHWIND ASSIGNMENT -02
+
+# Select products.productname, supplier.contact name,sum(products.unitsinprice) from supplier,product where suppliers.supplierid=products.supplierid group by supplier.id, products.productname
+1.SELECT orders.orderid,customers.contactname from orders,customers,products where customers.customerid=orders.customerid and products.productid=orders.productid and products.productname=’Tofu’;
+2.SELECT DISTINCT suppliers.contactname from suppliers,products where products.supplierid=suppliers.supplierid and products.productname in (‘tofu’,’ipoh  coffee’);
+3.SELECT customers.contactname,count(*) from customers,orders where customers.city=’london’ and customers.customerid=orders.customerid group by orders.customerid having count(*)>1;
+4.SELECT customers.contactname,employees.firstname  from customers,employees where customers.city=employees.city;
+5.SELECT contactname,companyname from customers where contacttitle=’Owner’;
+6.SELECT orders.orderid from orders,employees where employees.employeeid=orders.employeeid and employees.firstname=’Anne’;
+7.SELECT employees.fullname,count(orders.orderid) as total_order from orders,employee where employees.employeeid=orders.employeeid group by employees.employeeid,employees.fullname order by total_order DESC;
+8.SELECT products.productname from products,suppliers where suppliers.supplierid=products.supplierid and suppliers.companyname=’tokyo traders’;
+9.SELECT month(orderdate) as sale_month, sum(total_amount) as total_sale from orders group by month(orderdate) order by sale_month DESC;
+10.SELECT DATE(OrderDate) AS Date,DAYNAME(OrderDate) AS WeekName, SUM(Total_Amount) AS TotalSale FROM orders WHERE DAYOFWEEK(OrderDate) = 1 GROUP BY DATE(OrderDate), DAYNAME(OrderDate) ORDER BY Date;
+
+--NORTHWIND ASSIGNMENT -03
+
+1.SELECT count(*) as product_count from products where unitprice<20;
+2.SELECT productname,unitprice from products group by unitprice DESC  limit 1; 
+3.SELECT avg(unitprice) as average_unitprice from products;
+4.SELECT COUNT(*) AS Products_Above_Average FROM products WHERE UnitPrice > (SELECT AVG(UnitPrice) FROM products);
+5. SELECT count(*) from products where unitprice between 15 and 25;
+6. SELECT count(*) as employees_count from (select employees.employeeid from employees,orders where employees.employeeid=orders.employeeid and year(orders.orderdate)=2022 group by employees.employeeid having sum(orders.total_Amount)>100000) as employee_sale;
+24. SELECT  count(*) as employees_count from employees where year(hiredate)=1994;
+
+--NORTHWIND
+--Exercise Simple SQL Queries
+  
+1.SELECT * from customers; SELECT * from Orders; SELECT * from suppliers;
+2.SELECT * from customers order by country,contactname;
+3.SELECT * from orders order by orderdate;
+4.SELECT count(*) as total_order from orders where year(orderdate)=1997;
+5.SELECT contactname from customer where contacttitle=’manager’ order by contactname;
+6.SELECT orderid from orders where orderdate=’1997-05-19’;
+  
+--Exercise SQL Queries for JOINS
+1.SELECT customers.customerid,orders.orderid,customers.contactname from customers,orders where customers.customerid=orders.customerid and year(orderdate)=1996;
+2.SELECT employees.city,  (SELECT count(*) from customers where employees.city=customer.city) as customer_count, count(employees.employeeid) as employee_count from employees group by employees.city;
+3.SELECT customers.city,  (SELECT count(*) from employees where employees.city=customer.city) as employee_count, count(customers.customerid) as customer_count from customers group by customers.city;
+4.SELECT cities.City, (SELECT COUNT(*) FROM employees WHERE employees.City = cities.City) AS Employees_Count, (SELECT COUNT(*) FROM customers WHERE customers.City = cities.City) AS Customers_Count FROM (SELECT City FROM employees UNION SELECT City FROM customers) AS cities;
+
+--Exercise SQL Queries for HAVING
+1.SELECT orders.orderid,employees.fullname,orders.shippeddate from orders,employees where employees.employeeid=orders.employeeid and orders.orderdate>orders.requireddate; 
+2.SELECT products.productname,sum(orders.quantity) as total_quantity from orders,products where products.productid=orders.productid group by orders.productid, products.productname having sum(orders.quantity)<200;
+3.SELECT customers.contactname, count(orders.orderid) as total_orders from customers,orders where  customers.customerid=orders.customerid and orders.orderdate>=’1996-12-31’ group by customers.customerid,customers.contanctname having count(orders.orderid)>15;
+
+--Exercise SQL Inserting Records
+
+1.INSERT INTO employees (LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, City, Region, PostalCode, Country, HomePhone, ReportsTo) VALUES ('Sharma', 'Drishti', 'Manager', 'Ms.', '2008-10-13', '2020-04-05', 'Gwalior', 'Thatipur', '474011', 'India', '9893173144', NULL);
+2.INSERT INTO orders (CustomerID, EmployeeID, OrderDate, RequiredDate) VALUES (1, 1, '2026-10-10', '2026-10-20');
+3.INSERT INTO orders (OrderID, ProductID, UnitPrice, Quantity, Discount) VALUES (11078, 1, 18.00, 5, 0);
+
+
+--Exercise SQL Updating Records
+  
+1.Update employees set homephone=’8770804615’ where firstname=’Drishti’;
+2.UPDATE orders SET Quantity = Quantity * 2 WHERE OrderID = 11078 AND ProductID = 1;
+3.Update orders set quantity=quantity*2 where customerID=’1’;
+
+--Exercise SQL Deleting Records
+  
+1.Delete from employees where firstname=’drishti’;
+
+--Exercise Advance SQL Queries
+  
+1.SELECT sum(total_amount) as total_revenue from orders where year(orderdate)=1997;
+2.SELECT customers.contactname,sum(total_Amount) as total_Amount from customers,orders where customers.customerid=orders.customerid group by customers.customerid,customers.companyname;
+3.SELECT products.productname,sum(orders.quantity) from products,orders where products,productid=orders.productid group by products.productname,products.productid order by sum(orders.quantity) DESC limit 10;
+4.SELECT customers.contact name, sum(orders.total_Amount)  as total_revenue from orders,products where orders.productid=products.productid group by customers.customerid,customer.contactname order by total_revenue DESC;
+5.SELECT customers.contactname, sum(orders.total_amount) as total_Amount from orders,customers where customers.customerid=orders.customerid and customers.country=’UK’ group by customers.contactname,customers.customerid having sum(orders.total_Amount)>1000;
+6.SELECT customers.customerid,customers.companyname,customers.country,sum(orders.total_Amount),IFNULL((Select sum(orders.total_amount) from orders,customers where customers.customerid=orders.customerid and year(orders.orderdate)>=1997),0) as revenue_1997 from orders,customers where customers.customerid=orders.customerid group by customers.customerid;
+
+
+--QUERYING THE DATABASE PART-01
+  
+1.SELECT categoryname,description from categories;
+2.SELECT contactname,customerid,companyname from customers where city=’london’;
+3.SELECT * from suppliers where fax is not null;
+4.Select customerid from orders where requireddate between ‘1997-01-01’ and ‘1998-01-01’ and freight<100;
+5.SELECT companyname,contactname from customers where contacttitle=’owner’ and country in (‘mexico’,’sweden’,’germany’);
+6.SELECT count(*) as discontinued_products from products where discontinued=1;
+7.SELECT categoryname,description from categories where categoryname like ‘Co%’;
+8.SELECT companyname,city,country,postalcode from suppliers where address like ‘%rue%’ order by companyname DESC;
+9.SELECT productid,sum(quantity) as total_quantity from orders group by productid;
+10.SELECT contactname,address from customers,orders where customers.customerid=orders.customerid where orders.shipvia in (SELECT SupplierID FROM suppliers WHERE CompanyName = 'Speedy Express');
+11.SELECT companyname,contactname,contacttitle,region from suppliers;
+12.SELECT products.ProductName FROM products, categories WHERE products.CategoryID = categories.CategoryID AND categories.CategoryName = 'Condiments';
+13.SELECT contactname from customers where customerid not in (select customerid from orders);
+14.INSERT INTO Shippers (CompanyName) VALUES ('Amazon');
+15.UPDATE shippers set company name= ‘amazon prime shipping where company name =’amazon’;
+16.SELECT Shippers.CompanyName, ROUND(SUM(orders.Freight)) AS Total_Freight FROM Shipper,orders where Shippers.ShipperID = orders.ShipVia GROUP BY Shippers.ShipperID, Shippers.CompanyName;
+19.SELECT concat(lastname,’  ’,firstname) as display name from employees; 
+20.SELECT productname,sum(unitinstock) as total_units from products group by productname having sum(unitinstock)>100;
+
+--Querying the database – Part 2
+
+1.SELECT firstname,address,city,region from employees;
+2.SELECT firstname,address,city,region from employees where country=’USA’;
+3.SELECT firstname,address,city,region from employees where TIMESTAMPDIFF(YEAR,birthdate,CURDATE())>50;
+4.SELECT DISTINCT e.firstname,e.lastname,e.address,e.city,e.region from employees e,orders where employees.employeeid=orders.employeesid and orders.shipcity=’belgium’;
+5.SELECT employees.FirstName,employees.LastName,customers.CompanyName AS CustomerName FROM employees, customers, orders, Shippers WHERE employees.EmployeeID = orders.EmployeeID AND customers.CustomerID = orders.CustomerID AND orders.ShipVia = Shippers.ShipperID AND Shippers.CompanyName = 'Speedy Express' AND customers.City = 'Brussels';
+6.SELECT DISTINCT employees.fullname,employees.title from employees,products,orders where employees.employeeid=orders.employeeid and orders.productid=products.productid and products.productname in ('Gravad Lax', 'Mishi Kobe Niku');
+
+
